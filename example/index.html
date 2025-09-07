@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento TypeScript SDK Example</title>
+</head>
+<body>
+    <h1>Bento TypeScript SDK Example</h1>
+    
+    <div>
+        <h2>Identify User</h2>
+        <input type="email" id="email" placeholder="Enter email">
+        <button onclick="identifyUser()">Identify</button>
+    </div>
+
+    <div>
+        <h2>Track Event</h2>
+        <button onclick="trackClick()">Track Button Click</button>
+    </div>
+
+    <div>
+        <h2>Update Fields</h2>
+        <input type="text" id="firstName" placeholder="First Name">
+        <input type="text" id="lastName" placeholder="Last Name">
+        <button onclick="updateUserFields()">Update Fields</button>
+    </div>
+
+    <div>
+        <h2>Chat Controls</h2>
+        <button onclick="bento.showChat()">Show Chat</button>
+        <button onclick="bento.hideChat()">Hide Chat</button>
+        <button onclick="bento.openChat()">Open Chat</button>
+        <button onclick="bento.closeChat()">Close Chat</button>
+    </div>
+
+    <script type="module">
+        import { bento } from '../dist/index.mjs';
+        
+        // Make bento available globally for onclick handlers
+        window.bento = bento;
+        
+        // Initialize Bento - no await needed!
+        bento.init({
+            siteUuid: 'YOUR_SITE_UUID_HERE', // Replace with your actual site UUID
+        });
+        
+        // Track initial page view - automatically queued
+        bento.view();
+        
+        // Listen for ready events (optional - only if you need to know when ready)
+        window.addEventListener('bento:ready', () => {
+            console.log('Bento is ready!');
+        });
+        
+        window.addEventListener('bentochat:ready', () => {
+            console.log('Bento chat is ready!');
+        });
+        
+        // Define global functions for onclick handlers
+        window.identifyUser = function() {
+            const email = document.getElementById('email').value;
+            if (email) {
+                bento.identify(email);
+                console.log('User identified:', email);
+            }
+        };
+        
+        window.trackClick = function() {
+            bento.track('button_clicked', {
+                button_text: 'Track Button Click',
+                page: 'example',
+                timestamp: new Date().toISOString()
+            });
+            console.log('Event tracked: button_clicked');
+        };
+        
+        window.updateUserFields = function() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            
+            if (firstName || lastName) {
+                const fields = {};
+                if (firstName) fields.first_name = firstName;
+                if (lastName) fields.last_name = lastName;
+                
+                bento.updateFields(fields);
+                console.log('Fields updated:', fields);
+            }
+        };
+        
+        // No need to wait for DOM ready - Bento handles everything!
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        div {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        h2 {
+            margin-top: 0;
+        }
+        
+        input {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>

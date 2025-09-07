@@ -1,0 +1,32 @@
+{
+    "name": "bento-ts",
+    "version": "1.0.1",
+    "description": "TypeScript SDK for Bento - Track user behavior, manage subscribers, and integrate analytics",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsup",
+        "release": "npm run build && npm version patch && npm publish --access public"
+    },
+    "keywords": [
+        "bento",
+        "analytics",
+        "tracking",
+        "email",
+        "marketing",
+        "sdk",
+        "typescript"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "type": "commonjs",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^8.39.1",
+        "eslint": "^9.33.0",
+        "prettier": "^3.6.2",
+        "tsup": "^8.5.0",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "^8.39.1"
+    }
+}

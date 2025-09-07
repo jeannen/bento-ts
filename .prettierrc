@@ -1,0 +1,13 @@
+{
+    "trailingComma": "all",
+    "tabWidth": 4,
+    "semi": true,
+    "quoteStyle": "double",
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "printWidth": 1000,
+    "vueIndentScriptAndStyle": true,
+    "singleAttributePerLine": false,
+    "attributeGroups": ["^(:|v-)is$", "^v-for$", "^v-(if|else-if|else|show|cloak)$", "^v-(once|pre|memo)$", "^:?key$", "^:?ref$", "^(v-)?slot$", "^#", "^v-model$",  "^:?id$", "^:?label$", "^:?icon$", "$DEFAULT", "^((v-bind)?:)?data-", "^v-bind$", "^v-html$", "^v-text$", "^class$", "^(v-bind)?:class$", "^v-on", "^@"]
+}
