@@ -16,11 +16,11 @@ function injectScript(src: string, timeout: number = 30000): Promise<BentoAPI> {
         script.async = true;
         script.defer = true;
         script.src = src;
-        
+
         let hasResolved = false;
         // eslint-disable-next-line prefer-const
         let timeoutId: ReturnType<typeof setTimeout> | undefined;
-        
+
         const cleanup = (removeScript = false) => {
             window.removeEventListener('bento:ready', handleReady);
             if (timeoutId) clearTimeout(timeoutId);
@@ -29,7 +29,7 @@ function injectScript(src: string, timeout: number = 30000): Promise<BentoAPI> {
                 script.parentNode.removeChild(script);
             }
         };
-        
+
         const handleSuccess = (api: BentoAPI) => {
             if (!hasResolved) {
                 hasResolved = true;
@@ -37,7 +37,7 @@ function injectScript(src: string, timeout: number = 30000): Promise<BentoAPI> {
                 resolve(api);
             }
         };
-        
+
         const handleError = (error: Error) => {
             if (!hasResolved) {
                 hasResolved = true;
@@ -45,12 +45,12 @@ function injectScript(src: string, timeout: number = 30000): Promise<BentoAPI> {
                 reject(error);
             }
         };
-        
+
         script.onerror = (ev) => {
             console.error('[BENTO] Script loading error:', ev);
             handleError(new Error(`Failed to load Bento script from ${src}. This could be due to network issues, ad blockers, or invalid site configuration.`));
         };
-        
+
         // Listen for the bento:ready event
         const handleReady = () => {
             if (window.bento) {
@@ -59,14 +59,14 @@ function injectScript(src: string, timeout: number = 30000): Promise<BentoAPI> {
                 handleError(new Error('Bento script loaded but did not properly initialize'));
             }
         };
-        
+
         window.addEventListener('bento:ready', handleReady);
-        
+
         // Set timeout for the entire loading process
         timeoutId = setTimeout(() => {
             handleError(new Error(`Bento script loading timed out after ${timeout / 1000} seconds. Please check your network connection and site configuration.`));
         }, timeout);
-        
+
         document.head.appendChild(script);
     });
 }
@@ -95,7 +95,7 @@ export async function loadBento(config: BentoConfig): Promise<BentoAPI> {
 
     // Validate siteUuid
     if (!config.siteUuid || config.siteUuid === 'undefined') {
-        const error = new Error('[BENTO] Invalid or missing siteUuid. Please provide a valid site UUID from your Bento dashboard.');
+        const error = new Error('[BENTO] Invalid or missing siteUUID: ' + config.siteUuid);
         loadError = error;
         return Promise.reject(error);
     }
@@ -105,7 +105,7 @@ export async function loadBento(config: BentoConfig): Promise<BentoAPI> {
     if (isLocalhost) console.log(`📊 [BENTO DEV] Loading Bento script with config:`, config);
 
     let scriptUrl: string;
-    
+
     if (config.useAdvancedInstallation) {
         // Advanced installation: https://app.bentonow.com/{Site Key}.js
         scriptUrl = `https://app.bentonow.com/${config.siteUuid}.js`;
@@ -121,7 +121,7 @@ export async function loadBento(config: BentoConfig): Promise<BentoAPI> {
         .then((api) => {
             isLoading = false;
             loadError = null;
-            
+
             // If using advanced installation, automatically call bento.view() after loading
             if (config.useAdvancedInstallation) {
                 // Wait for bento$ to be available and call view
@@ -133,7 +133,7 @@ export async function loadBento(config: BentoConfig): Promise<BentoAPI> {
                     });
                 }
             }
-            
+
             return api;
         })
         .catch((error) => {
@@ -143,7 +143,7 @@ export async function loadBento(config: BentoConfig): Promise<BentoAPI> {
             console.error('[BENTO] Failed to load:', error.message);
             throw error;
         });
-    
+
     return loaderPromise;
 }
 
@@ -189,7 +189,7 @@ async function waitForMethod(methodName: string): Promise<BentoAPI> {
 
         const checkMethod = () => {
             attempts++;
-            
+
             // Check for load error
             if (loadError) {
                 cleanup();
@@ -213,12 +213,12 @@ async function waitForMethod(methodName: string): Promise<BentoAPI> {
             cleanup();
             checkMethod();
         };
-        
+
         window.addEventListener('bento:ready', handleReady);
-        
+
         // Check periodically
         intervalId = setInterval(checkMethod, 100);
-        
+
         // Start checking immediately
         checkMethod();
     });
