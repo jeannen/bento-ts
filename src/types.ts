@@ -28,6 +28,16 @@ export type BentoConfig = {
 	 * { useAdvancedInstallation: true }
 	 */
 	useAdvancedInstallation?: boolean;
+	
+	/**
+	 * Timeout for loading the Bento script in milliseconds.
+	 * If the script doesn't load within this time, the promise will be rejected.
+	 * 
+	 * @default 30000 (30 seconds)
+	 * @example
+	 * { timeout: 60000 } // 60 seconds
+	 */
+	timeout?: number;
 };
 
 /**
